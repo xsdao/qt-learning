@@ -1,0 +1,1347 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《Qt 6 C++ 开发指南》学习报告</title>
+<style>
+  :root {
+    --bg: #0f1419;
+    --panel: #161b22;
+    --text: #d8dee9;
+    --muted: #8b949e;
+    --accent: #41cd52;
+    --accent2: #58a6ff;
+    --border: #263039;
+    --code-bg: #1c2430;
+    --table-alt: #131922;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, "Segoe UI", "Microsoft YaHei", "PingFang SC", Roboto, sans-serif;
+    line-height: 1.75;
+    font-size: 16px;
+  }
+  .wrap { display: flex; max-width: 1280px; margin: 0 auto; }
+  /* 侧边目录 */
+  nav.toc {
+    position: sticky; top: 0; align-self: flex-start;
+    width: 260px; max-height: 100vh; overflow-y: auto;
+    padding: 24px 16px; border-right: 1px solid var(--border);
+    font-size: 13px;
+  }
+  nav.toc h3 { margin: 0 0 12px; color: var(--accent); font-size: 14px; letter-spacing: .05em; }
+  nav.toc ul { list-style: none; margin: 0; padding-left: 12px; }
+  nav.toc a { color: var(--muted); text-decoration: none; display: block; padding: 3px 6px; border-radius: 4px; }
+  nav.toc a:hover { color: var(--accent2); background: var(--panel); }
+  main { flex: 1; min-width: 0; padding: 40px 56px 120px; }
+  h1, h2, h3, h4 { line-height: 1.3; margin-top: 1.6em; }
+  h1 {
+    font-size: 2.1em; color: #fff; margin-top: 0;
+    border-bottom: 2px solid var(--accent); padding-bottom: 14px;
+  }
+  h2 {
+    font-size: 1.5em; color: var(--accent); margin-top: 2em;
+    border-left: 4px solid var(--accent); padding-left: 12px;
+  }
+  h3 { font-size: 1.2em; color: var(--accent2); }
+  h4 { font-size: 1.05em; color: #c9d1d9; }
+  p { margin: .7em 0; }
+  a { color: var(--accent2); }
+  strong { color: #fff; }
+  blockquote {
+    margin: 1em 0; padding: 12px 18px;
+    background: var(--panel); border-left: 4px solid var(--accent2);
+    color: var(--muted); border-radius: 0 6px 6px 0;
+  }
+  blockquote p { margin: .3em 0; }
+  code {
+    background: var(--code-bg); color: #e6b673;
+    padding: 2px 6px; border-radius: 4px;
+    font-family: "Cascadia Code", "Consolas", "JetBrains Mono", monospace;
+    font-size: .88em;
+  }
+  pre {
+    background: var(--code-bg); border: 1px solid var(--border);
+    border-radius: 8px; padding: 16px 18px; overflow-x: auto;
+    margin: 1em 0;
+  }
+  pre code { background: none; color: #c9d1d9; padding: 0; font-size: .88em; line-height: 1.6; }
+  table {
+    border-collapse: collapse; width: 100%; margin: 1.2em 0;
+    font-size: .92em; overflow: hidden; border-radius: 8px;
+    box-shadow: 0 0 0 1px var(--border);
+  }
+  thead { background: #1d2733; }
+  th { color: var(--accent); font-weight: 600; text-align: left; }
+  th, td { padding: 9px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tbody tr:nth-child(even) { background: var(--table-alt); }
+  tbody tr:hover { background: #1a2330; }
+  ul, ol { padding-left: 1.6em; }
+  li { margin: .3em 0; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 2.5em 0; }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-thumb { background: #2d3844; border-radius: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  @media (max-width: 900px) {
+    .wrap { flex-direction: column; }
+    nav.toc { position: relative; width: auto; max-height: none; border-right: none; border-bottom: 1px solid var(--border); }
+    main { padding: 24px 18px 80px; }
+    h1 { font-size: 1.6em; }
+  }
+  @media print {
+    nav.toc { display: none; }
+    body { background: #fff; color: #000; }
+    main { padding: 0; }
+    pre, table { box-shadow: none; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav class="toc" id="toc"><h3>目录</h3></nav>
+<main>
+<h1 id="qt-6-c">《Qt 6 C++ 开发指南》配套源码 —— 详细学习报告</h1>
+<blockquote>
+<p>源码位置：<code>D:\Qt\learn\book</code><br />
+原书作者：王维波、栗宝鹃、侯春望<br />
+版本说明：仓库同时包含 <strong>qmake 版</strong> 与 <strong>CMake 版</strong> 源码；本报告基于 CMake 版（<code>Source/</code>）<br />
+生成日期：2026-10-31</p>
+</blockquote>
+<hr />
+<h2 id="_1">一、总览</h2>
+<table>
+<thead>
+<tr>
+<th>项</th>
+<th>数据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>章节</td>
+<td><strong>18 章</strong></td>
+</tr>
+<tr>
+<td>示例工程</td>
+<td><strong>81 个</strong></td>
+</tr>
+<tr>
+<td>源码文件总数</td>
+<td><strong>2132 个</strong></td>
+</tr>
+<tr>
+<td><code>.cpp</code></td>
+<td>198</td>
+</tr>
+<tr>
+<td><code>.h</code></td>
+<td>121</td>
+</tr>
+<tr>
+<td><code>.ui</code></td>
+<td>94（仅 3 个工程无 .ui）</td>
+</tr>
+<tr>
+<td><code>.qrc</code></td>
+<td>55</td>
+</tr>
+<tr>
+<td><code>CMakeLists.txt</code></td>
+<td>81（每工程一个）</td>
+</tr>
+<tr>
+<td><code>.pro</code></td>
+<td>2（仅 Chap11 插件、Chap18 工具保留 qmake）</td>
+</tr>
+<tr>
+<td>资源文件</td>
+<td>bmp 1225 / ico 132 / jpg 80 / png 59 / GIF 29 / wav 11</td>
+</tr>
+</tbody>
+</table>
+<p><strong>结论性判断</strong>：这是一套<strong>教学级、以 <code>.ui</code> 可视化为主</strong>的示例集，覆盖 Qt Widgets 全栈。绝大多数示例采用「CMake + AUTOUIC/AUTOMOC/AUTORCC + .ui 表单」的标准模式。</p>
+<hr />
+<h2 id="_2">二、知识点分布（由头文件引用频次统计）</h2>
+<p>全书被引用最多的 Qt 类（可视为学习权重排序）：</p>
+<table>
+<thead>
+<tr>
+<th>排名</th>
+<th>类</th>
+<th>次数</th>
+<th>所属领域</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>QApplication</code></td>
+<td>82</td>
+<td>应用框架</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>QMainWindow</code></td>
+<td>51</td>
+<td>主窗口</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>QWidget</code></td>
+<td>31</td>
+<td>控件基类</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>QMessageBox</code></td>
+<td>29</td>
+<td>对话框</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>QFileDialog</code></td>
+<td>28</td>
+<td>文件对话框</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>QDialog</code></td>
+<td>19</td>
+<td>对话框</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>QLabel</code></td>
+<td>17</td>
+<td>显示控件</td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>QPainter</code></td>
+<td>13</td>
+<td>绘图</td>
+</tr>
+<tr>
+<td>9</td>
+<td><code>QColorDialog</code></td>
+<td>10</td>
+<td>颜色选择</td>
+</tr>
+<tr>
+<td>10</td>
+<td><code>QPaintEvent</code></td>
+<td>10</td>
+<td>事件</td>
+</tr>
+<tr>
+<td>11</td>
+<td><code>QTextStream</code></td>
+<td>8</td>
+<td>文件/文本</td>
+</tr>
+<tr>
+<td>12</td>
+<td><code>QPen</code></td>
+<td>7</td>
+<td>绘图</td>
+</tr>
+<tr>
+<td>13</td>
+<td><code>QInputDialog</code></td>
+<td>7</td>
+<td>输入对话框</td>
+</tr>
+<tr>
+<td>14</td>
+<td><code>QDir</code></td>
+<td>7</td>
+<td>文件系统</td>
+</tr>
+<tr>
+<td>15</td>
+<td><code>QtMultimedia</code></td>
+<td>6</td>
+<td>多媒体</td>
+</tr>
+<tr>
+<td>16</td>
+<td><code>QtCharts</code></td>
+<td>6</td>
+<td>图表</td>
+</tr>
+<tr>
+<td>17</td>
+<td><code>QChartView</code></td>
+<td>6</td>
+<td>图表</td>
+</tr>
+<tr>
+<td>18</td>
+<td><code>QMouseEvent</code></td>
+<td>6</td>
+<td>事件</td>
+</tr>
+<tr>
+<td>19</td>
+<td><code>QFontDialog</code></td>
+<td>6</td>
+<td>字体选择</td>
+</tr>
+<tr>
+<td>20</td>
+<td><code>QCloseEvent</code></td>
+<td>5</td>
+<td>事件</td>
+</tr>
+<tr>
+<td>21</td>
+<td><code>QItemSelectionModel</code></td>
+<td>5</td>
+<td>Model/View</td>
+</tr>
+<tr>
+<td>22</td>
+<td><code>QRandomGenerator</code></td>
+<td>5</td>
+<td>随机数</td>
+</tr>
+<tr>
+<td>23</td>
+<td><code>QStandardItemModel</code></td>
+<td>5</td>
+<td>Model/View</td>
+</tr>
+<tr>
+<td>24</td>
+<td><code>QFile</code> / <code>QFileInfo</code></td>
+<td>5</td>
+<td>文件</td>
+</tr>
+<tr>
+<td>25</td>
+<td><code>QThread</code></td>
+<td>4</td>
+<td>多线程</td>
+</tr>
+<tr>
+<td>26</td>
+<td><code>QtSql</code> / <code>QDataWidgetMapper</code></td>
+<td>4</td>
+<td>数据库</td>
+</tr>
+<tr>
+<td>27</td>
+<td><code>QSettings</code></td>
+<td>4</td>
+<td>配置持久化</td>
+</tr>
+<tr>
+<td>28</td>
+<td><code>QGraphicsScene</code></td>
+<td>3</td>
+<td>图形场景</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>解读</strong>：本书重点明显集中在「<strong>窗口 + 对话框 + 常用控件 + 文件/绘图</strong>」这条主线；图表、多媒体、网络、线程属于后半程专题。</p>
+</blockquote>
+<hr />
+<h2 id="_3">三、逐章详解</h2>
+<h3 id="chap01_intro1">Chap01_Intro（1 个示例）</h3>
+<table>
+<thead>
+<tr>
+<th>示例</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>samp1_1HelloWorld</code></td>
+<td>最小 Widgets 程序：<code>QApplication</code> + <code>Widget(QWidget)</code> + <code>.ui</code>（QLabel "Hello World"）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>知识点</strong>：Qt 程序最小骨架、<code>setupUi</code>、CMake <code>AUTOUIC</code>。</p>
+<hr />
+<h3 id="chap02_basics5-gui">Chap02_Basics（5 个示例）— GUI 程序设计基础 ⭐核心章</h3>
+<table>
+<thead>
+<tr>
+<th>示例</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>samp2_1HelloQt</code></td>
+<td>QLabel + QPushButton，<strong>.ui 内可视化连接信号槽</strong>（按钮 close）</td>
+</tr>
+<tr>
+<td><code>samp2_2VisualUI</code></td>
+<td><strong>可视化 UI</strong>：复选框/单选框/文本框/按钮 + 布局 + <code>res.qrc</code> 资源 + <code>.rc</code> 图标</td>
+</tr>
+<tr>
+<td><code>samp2_3CodeUI</code></td>
+<td><strong>纯代码建 UI</strong>：<code>new</code> 控件 + <code>QHBoxLayout/QVBoxLayout</code>（全书唯一纯代码界面示例）</td>
+</tr>
+<tr>
+<td><code>samp2_4CMake</code></td>
+<td>CMake 工程构建演示（命令行）</td>
+</tr>
+<tr>
+<td><code>samp2_4CMakeGUI</code></td>
+<td>CMake GUI 构建演示（无 main.cpp，为构建配置样例）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>核心知识点</strong><br />
+- <code>QCheckBox</code> / <code>QRadioButton</code> / <code>QPushButton</code> / <code>QPlainTextEdit</code><br />
+- <code>QFont</code>（粗体/斜体/下划线）、<code>QPalette</code>（文字颜色）<br />
+- 布局管理器：<code>QHBoxLayout</code>、<code>QVBoxLayout</code>、<code>addStretch</code>、<code>setLayout</code><br />
+- <strong>信号槽两种连接方式</strong>：Designer 可视化连接（<code>.ui</code> 的 <code>&lt;connections&gt;</code>）vs 代码 <code>connect()</code><br />
+- <strong>自动连接命名法</strong>：<code>on_控件名_信号名()</code>（如 <code>on_btnClear_clicked()</code>）<br />
+- <code>.qrc</code> 资源系统、<code>.rc</code> exe 图标<br />
+- CMake：<code>AUTOUIC/AUTOMOC/AUTORCC</code>、<code>qt_add_executable</code>、<code>target_link_libraries</code></p>
+<blockquote>
+<p><strong>学习建议</strong>：这是全书最重要的入门章。务必把 <code>samp2_2</code>（可视化）与 <code>samp2_3</code>（纯代码）对照看，理解 <code>.ui</code> 到底帮你生成了什么。</p>
+</blockquote>
+<hr />
+<h3 id="chap03_qtmodules1">Chap03_QtModules（1 个示例）— 元对象系统</h3>
+<table>
+<thead>
+<tr>
+<th>示例</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>samp3_1Meta</code></td>
+<td>信号与槽、属性系统、<code>Q_OBJECT</code>、moc、运行时类型信息、<code>QMetaObject</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>知识点</strong>：Qt 元对象系统（MOC 机制）、<code>signals/slots</code> 宏、<code>Q_PROPERTY</code>、<code>QMetaType</code>。</p>
+<hr />
+<h3 id="chap04_widgets13">Chap04_Widgets（13 个示例）— 常用控件 ⭐</h3>
+<table>
+<thead>
+<tr>
+<th>示例</th>
+<th>控件/主题</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>samp4_01StrChar</code></td>
+<td>字符串与字符处理</td>
+</tr>
+<tr>
+<td><code>samp4_02Str</code></td>
+<td>QString 字符串操作</td>
+</tr>
+<tr>
+<td><code>samp4_03StrNum</code></td>
+<td>字符串与数值转换</td>
+</tr>
+<tr>
+<td><code>samp4_04Spinbox</code></td>
+<td><code>QSpinBox</code> 数值输入</td>
+</tr>
+<tr>
+<td><code>samp4_05ButtonCheck</code></td>
+<td>按钮与复选框状态</td>
+</tr>
+<tr>
+<td><code>samp4_06Slider</code></td>
+<td><code>QSlider</code> 滑块</td>
+</tr>
+<tr>
+<td><code>samp4_07DateTime</code></td>
+<td><code>QDate/Time/DateTime</code></td>
+</tr>
+<tr>
+<td><code>samp4_08Timer</code></td>
+<td><code>QTimer</code> 定时器</td>
+</tr>
+<tr>
+<td><code>samp4_09Combobox</code></td>
+<td><code>QComboBox</code> 下拉框</td>
+</tr>
+<tr>
+<td><code>samp4_10Actions</code></td>
+<td><code>QAction</code> 动作（菜单/工具栏）</td>
+</tr>
+<tr>
+<td><code>samp4_11ListWidget</code></td>
+<td><code>QListWidget</code> 列表</td>
+</tr>
+<tr>
+<td><code>samp4_12TreeWidget</code></td>
+<td><code>QTreeWidget</code> 树</td>
+</tr>
+<tr>
+<td><code>samp4_13TableWidget</code></td>
+<td><code>QTableWidget</code> 表格</td>
+</tr>
+</tbody>
+</table>
+<p><strong>知识点</strong>：Widgets 控件全集入门、字符串/数值转换、定时器、Item Widgets（List/Tree/Table）。</p>
+<hr />
+<h3 id="chap05_modelview4">chap05_ModelView（4 个示例）— 模型/视图 ⭐上位机重点</h3>
+<table>
+<thead>
+<tr>
+<th>示例</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>samp5_1ListModel</code></td>
+<td><code>QListView</code> + 自定义 Model</td>
+</tr>
+<tr>
+<td><code>samp5_2TableModel</code></td>
+<td><code>QTableView</code> + 表格模型</td>
+</tr>
+<tr>
+<td><code>samp5_3Delegate</code></td>
+<td>自定义 <code>QStyledItemDelegate</code> 委托（自绘单元格）</td>
+</tr>
+<tr>
+<td><code>samp5_4FileSys</code></td>
+<td><code>QFileSystemModel</code> 文件系统浏览</td>
+</tr>
+</tbody>
+</table>
+<p><strong>知识点</strong>：Model/View 架构（数据与显示分离）、自定义 Model/Delegate、<code>QItemSelectionModel</code>、<code>QDataWidgetMapper</code>。</p>
+<blockquote>
+<p>上位机做数据表格/日志列表时，Model/View 比 <code>QTableWidget</code> 更适合大数据量。</p>
+</blockquote>
+<hr />
+<h3 id="chap06_events5">Chap06_Events（5 个示例）— 事件系统 ⭐</h3>
+<table>
+<thead>
+<tr>
+<th>示例</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>samp6_1DefaultHandler</code></td>
+<td>默认事件处理（<code>paintEvent/mouseEvent/keyEvent/closeEvent</code>）</td>
+</tr>
+<tr>
+<td><code>samp6_2EventAndSignal</code></td>
+<td>事件与信号的转换</td>
+</tr>
+<tr>
+<td><code>samp6_3EventFilter</code></td>
+<td><strong>事件过滤器</strong> <code>eventFilter</code>（拦截其他对象事件）</td>
+</tr>
+<tr>
+<td><code>samp6_4DragFile</code></td>
+<td>拖放文件（<code>dragEnterEvent/dropEvent</code>）</td>
+</tr>
+<tr>
+<td><code>samp6_5DragDropItems</code></td>
+<td>列表项拖放排序</td>
+</tr>
+</tbody>
+</table>
+<p><strong>知识点</strong>：事件分发机制、事件过滤器、拖放（Drag &amp; Drop）、<code>accept/ignore</code>。</p>
+<hr />
+<h3 id="chap07_forms5">Chap07_Forms（5 个示例）— 窗体与对话框 ⭐</h3>
+<table>
+<thead>
+<tr>
+<th>示例</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>samp7_1StandardDialogs</code></td>
+<td>标准对话框（<code>QMessageBox/QFileDialog/QColorDialog/QFontDialog/QInputDialog</code>）</td>
+</tr>
+<tr>
+<td><code>samp7_2CustomDialogs</code></td>
+<td>自定义对话框（模态 <code>exec()</code> / 非模态 <code>show()</code>）</td>
+</tr>
+<tr>
+<td><code>samp7_3MultiWindow</code></td>
+<td>多窗口切换</td>
+</tr>
+<tr>
+<td><code>samp7_4MDI</code></td>
+<td><strong>MDI 多文档界面</strong>（<code>QMdiArea</code>）</td>
+</tr>
+<tr>
+<td><code>samp7_5Splash</code></td>
+<td>启动画面 <code>QSplashScreen</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>知识点</strong>：模态/非模态、标准对话框、多窗口、MDI、Splash。</p>
+<hr />
+<h3 id="chap08_file4">Chap08_File（4 个示例）— 文件操作</h3>
+<table>
+<thead>
+<tr>
+<th>示例</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>samp8_1DirFile</code></td>
+<td><code>QDir/QFileInfo</code> 目录与文件遍历</td>
+</tr>
+<tr>
+<td><code>samp8_2TextFile</code></td>
+<td>文本文件读写（<code>QTextStream</code>）</td>
+</tr>
+<tr>
+<td><code>samp8_3StreamData</code></td>
+<td>二进制流 <code>QDataStream</code></td>
+</tr>
+<tr>
+<td><code>samp8_4RawBytes</code></td>
+<td>原始字节读写 <code>QFile</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>知识点</strong>：文件系统 API、文本/二进制读写、流序列化。</p>
+<hr />
+<h3 id="chap09_database4-sqlite">Chap09_Database（4 个示例）— SQLite 数据库 ⭐上位机重点</h3>
+<table>
+<thead>
+<tr>
+<th>示例</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>samp9_1TableModel</code></td>
+<td><code>QSqlTableModel</code> 绑定表格</td>
+</tr>
+<tr>
+<td><code>samp9_2QueryModel</code></td>
+<td><code>QSqlQueryModel</code> 查询显示</td>
+</tr>
+<tr>
+<td><code>samp9_3QueryEdit</code></td>
+<td>可编辑查询</td>
+</tr>
+<tr>
+<td><code>samp9_4Rational</code></td>
+<td>关系表（主外键）演示（含 <code>demodb.db3</code>）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>知识点</strong>：<code>QtSql</code>、<code>QSqlDatabase</code>、<code>QSqlTableModel/QSqlQueryModel</code>、<code>QDataWidgetMapper</code>、事务。</p>
+<hr />
+<h3 id="chap10_graphics6">Chap10_Graphics（6 个示例）— 绘图与图形 ⭐</h3>
+<table>
+<thead>
+<tr>
+<th>示例</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>samp10_1Painter</code></td>
+<td><code>QPainter</code> 基本绘图（笔/刷/文字）</td>
+</tr>
+<tr>
+<td><code>samp10_2Paintpath</code></td>
+<td><code>QPainterPath</code> 绘制路径</td>
+</tr>
+<tr>
+<td><code>samp10_3ViewPort</code></td>
+<td>窗口/视口映射（<code>setWindow/setViewport</code>）</td>
+</tr>
+<tr>
+<td><code>samp10_4Cooridate</code></td>
+<td>坐标变换（平移/旋转/缩放）</td>
+</tr>
+<tr>
+<td><code>samp10_5GraphicsDraw</code></td>
+<td><strong>Graphics View 框架</strong>（<code>QGraphicsScene/QGraphicsView/QGraphicsItem</code>）</td>
+</tr>
+<tr>
+<td><code>samp10_6ImagePro</code></td>
+<td>图像处理（<code>QImage/QPixmap</code>）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>知识点</strong>：<code>QPainter</code>、<code>QPen/QBrush</code>、坐标变换、Graphics View 场景框架、图像处理。</p>
+<blockquote>
+<p>上位机的曲线/仪表盘自绘、可视化编辑器（如 FluentHMI 的拖拽画布）都依赖这一章。</p>
+</blockquote>
+<hr />
+<h3 id="chap11_plugin4">Chap11_Plugin（4 个示例）— 插件与库 ⭐工程化</h3>
+<table>
+<thead>
+<tr>
+<th>示例</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>samp11_1Promotion</code></td>
+<td>控件提升（Promotion，把普通控件提升为自定义类）</td>
+</tr>
+<tr>
+<td><code>samp11_2Plugin</code></td>
+<td><strong>Qt 插件</strong>（<code>QDesignerCustomWidgetInterface</code>，含 <code>.pro</code>/<code>.pri</code>）</td>
+</tr>
+<tr>
+<td><code>samp11_3StaticLib</code></td>
+<td>静态库（含构建产物 <code>MyStaticLib.lib</code>）</td>
+</tr>
+<tr>
+<td><code>samp11_4SharedLib</code></td>
+<td>动态库（含 <code>MySharedLib.dll</code>）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>知识点</strong>：控件提升、Qt 插件机制、静态库/动态库、<code>.pri</code> 模块化、qmake 与 CMake 混合。</p>
+<hr />
+<h3 id="chap12_charts4-qt-charts">Chap12_Charts（4 个示例）— Qt Charts 图表 ⭐上位机重点</h3>
+<table>
+<thead>
+<tr>
+<th>示例</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>samp12_1SimpleChart</code></td>
+<td>简单折线图</td>
+</tr>
+<tr>
+<td><code>samp12_2ChartConfig</code></td>
+<td>图表配置（轴/图例/样式）</td>
+</tr>
+<tr>
+<td><code>samp12_3Interactive</code></td>
+<td>交互（缩放/拖动）</td>
+</tr>
+<tr>
+<td><code>samp12_4BarAndPie</code></td>
+<td>柱状图 + 饼图</td>
+</tr>
+</tbody>
+</table>
+<p><strong>知识点</strong>：<code>QChart/QChartView/QLineSeries/QBarSeries/QPieSeries</code>、坐标轴、实时刷新。</p>
+<hr />
+<h3 id="chap13_datavisualization4-3d">Chap13_DataVisualization（4 个示例）— 3D 数据可视化</h3>
+<table>
+<thead>
+<tr>
+<th>示例</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>samp13_1Bar3D</code></td>
+<td>3D 柱状图</td>
+</tr>
+<tr>
+<td><code>samp13_2Scatter3D</code></td>
+<td>3D 散点图</td>
+</tr>
+<tr>
+<td><code>samp13_3Surface3D</code></td>
+<td>3D 曲面</td>
+</tr>
+<tr>
+<td><code>samp13_4Map3D</code></td>
+<td>3D 地图</td>
+</tr>
+</tbody>
+</table>
+<p><strong>知识点</strong>：<code>QtDataVisualization</code>、<code>Q3DBars/Q3DScatter/Q3DSurface</code>。</p>
+<hr />
+<h3 id="chap14_thread4">Chap14_Thread（4 个示例）— 多线程 ⭐上位机重点</h3>
+<table>
+<thead>
+<tr>
+<th>示例</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>samp14_1ThreadSignal</code></td>
+<td><code>QThread</code> + 信号槽（子类化 <code>run()</code> 发信号给 UI）</td>
+</tr>
+<tr>
+<td><code>samp14_2Mutex</code></td>
+<td><code>QMutex</code> 互斥量保护共享数据</td>
+</tr>
+<tr>
+<td><code>samp14_3Wait</code></td>
+<td><code>QWaitCondition</code> 等待/唤醒（生产者-消费者）</td>
+</tr>
+<tr>
+<td><code>samp14_4Semaphore</code></td>
+<td><code>QSemaphore</code> 信号量同步</td>
+</tr>
+</tbody>
+</table>
+<p><strong>典型代码</strong>（<code>samp14_1</code> 的 <code>TDiceThread</code>）：</p>
+<pre><code class="language-cpp">class TDiceThread : public QThread {
+    Q_OBJECT
+signals:
+    void newValue(int seq, int diceValue);  // 子线程发信号 → 主线程槽
+protected:
+    void run() override;                     // 线程体
+public:
+    void diceBegin(); void dicePause(); void stopThread();
+};
+</code></pre>
+<p><strong>知识点</strong>：QThread 两种用法（子类化 vs moveToThread）、线程同步（Mutex/WaitCondition/Semaphore）、跨线程信号槽（自动排队）。</p>
+<blockquote>
+<p><strong>上位机必备</strong>：串口/网络接收线程 + 主线程 UI 刷新，正是这套模型。</p>
+</blockquote>
+<hr />
+<h3 id="chap15_network5">Chap15_Network（5 个示例）— 网络编程 ⭐上位机重点</h3>
+<table>
+<thead>
+<tr>
+<th>示例</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>samp15_1HostInfo</code></td>
+<td>主机信息查询（<code>QHostInfo</code>）</td>
+</tr>
+<tr>
+<td><code>samp15_2TCP</code></td>
+<td><strong>TCP 客户端 + 服务器</strong>（<code>QTcpSocket/QTcpServer</code>）</td>
+</tr>
+<tr>
+<td><code>samp15_3UDP</code></td>
+<td>UDP 收发（<code>QUdpSocket</code>）</td>
+</tr>
+<tr>
+<td><code>samp15_4UDPMulticast</code></td>
+<td>UDP 组播</td>
+</tr>
+<tr>
+<td><code>samp15_5HTTP</code></td>
+<td>HTTP 请求（<code>QNetworkAccessManager</code>）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>知识点</strong>：TCP/UDP、组播、HTTP、<code>QNetworkAccessManager/QNetworkReply</code>。</p>
+<hr />
+<h3 id="chap16_multimedia7">Chap16_Multimedia（7 个示例）— 多媒体</h3>
+<table>
+<thead>
+<tr>
+<th>示例</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>samp16_1AudioPlayer</code></td>
+<td>音频播放 <code>QMediaPlayer</code></td>
+</tr>
+<tr>
+<td><code>samp16_2SoundEffect</code></td>
+<td>音效 <code>QSoundEffect</code></td>
+</tr>
+<tr>
+<td><code>samp16_3AudioRecorder</code></td>
+<td>录音 <code>QAudioInput</code></td>
+</tr>
+<tr>
+<td><code>samp16_4AudioInOut</code></td>
+<td>音频输入输出</td>
+</tr>
+<tr>
+<td><code>samp16_5VideoWidget</code></td>
+<td>视频播放（<code>QVideoWidget</code>）</td>
+</tr>
+<tr>
+<td><code>samp16_6VideoItem</code></td>
+<td>QML 视频项</td>
+</tr>
+<tr>
+<td><code>samp16_7Camera</code></td>
+<td>摄像头 <code>QCamera</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>知识点</strong>：<code>QtMultimedia</code>、音视频播放、录制、摄像头。</p>
+<hr />
+<h3 id="chap17_serialport1">Chap17_SerialPort（1 个示例）— 串口通信 ⭐上位机核心</h3>
+<table>
+<thead>
+<tr>
+<th>示例</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>samp17_1ESP8266</code></td>
+<td>与 ESP8266 模块串口通信（串口助手，含大 <code>.ui</code> 41532 字节）</td>
+</tr>
+</tbody>
+</table>
+<p>文件：<code>mainwindow.cpp</code>（11KB 主逻辑）、<code>tmylabel.h/cpp</code>（自定义标签）。</p>
+<p><strong>知识点</strong>：<code>QSerialPort</code>、串口打开/配置/收发、<code>readyRead</code> 信号、自定义控件。</p>
+<blockquote>
+<p><strong>注意</strong>：需 Qt SerialPort 模块（你已补装 <code>qtserialport</code>）。</p>
+</blockquote>
+<hr />
+<h3 id="chap18_tools4">Chap18_Tools（4 个示例）— 工程工具</h3>
+<table>
+<thead>
+<tr>
+<th>示例</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>samp18_1MultiLang</code></td>
+<td>多语言国际化（<code>tr()</code> + <code>.ts/.qm</code> + <code>QTranslator</code>）</td>
+</tr>
+<tr>
+<td><code>samp18_2QSS</code></td>
+<td>QSS 样式表换肤</td>
+</tr>
+<tr>
+<td><code>samp18_3Deploy</code></td>
+<td>程序发布部署（<code>windeployqt</code> 等）</td>
+</tr>
+<tr>
+<td><code>samp18_4Installer</code></td>
+<td>安装包制作</td>
+</tr>
+</tbody>
+</table>
+<p><strong>知识点</strong>：i18n（<code>lupdate/lrelease</code>）、QSS、部署、打包。</p>
+<hr />
+<h2 id="_4">四、按「上位机开发」需求的知识映射</h2>
+<table>
+<thead>
+<tr>
+<th>上位机需求</th>
+<th>对应章节</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>主界面/窗口</td>
+<td>Chap02, Chap07</td>
+<td><code>QMainWindow</code>、多窗口、MDI</td>
+</tr>
+<tr>
+<td>参数设置面板</td>
+<td>Chap04</td>
+<td>SpinBox/Slider/ComboBox/CheckBox</td>
+</tr>
+<tr>
+<td>数据表格/日志</td>
+<td>Chap05, Chap04</td>
+<td>Model/View（推荐）、QTableWidget（简单）</td>
+</tr>
+<tr>
+<td>实时曲线</td>
+<td>Chap12, Chap10</td>
+<td>Qt Charts；自绘用 QPainter</td>
+</tr>
+<tr>
+<td>仪表盘/自定义图形</td>
+<td>Chap10</td>
+<td>Graphics View、QPainter</td>
+</tr>
+<tr>
+<td>串口通信</td>
+<td><strong>Chap17</strong></td>
+<td>QSerialPort</td>
+</tr>
+<tr>
+<td>TCP/UDP/MQTT</td>
+<td><strong>Chap15</strong></td>
+<td>QTcpSocket/QUdpSocket（MQTT 需第三方或自实现）</td>
+</tr>
+<tr>
+<td>本地存储/历史数据</td>
+<td>Chap09, Chap08</td>
+<td>SQLite + 文件</td>
+</tr>
+<tr>
+<td>后台采集不卡界面</td>
+<td><strong>Chap14</strong></td>
+<td>QThread + 信号槽</td>
+</tr>
+<tr>
+<td>配置保存</td>
+<td>Chap04/18</td>
+<td><code>QSettings</code></td>
+</tr>
+<tr>
+<td>界面美化</td>
+<td>Chap18</td>
+<td>QSS</td>
+</tr>
+<tr>
+<td>发布给客户</td>
+<td>Chap18, Chap11</td>
+<td>部署/打包、动态库</td>
+</tr>
+<tr>
+<td>自定义控件复用</td>
+<td>Chap11</td>
+<td>控件提升、插件、库</td>
+</tr>
+</tbody>
+</table>
+<p><strong>最小可用的上位机学习路径</strong>：</p>
+<pre><code>Chap01 → Chap02 → Chap04 → Chap07 → Chap14 → Chap17 → Chap15 → Chap12 → Chap09 → Chap18
+</code></pre>
+<hr />
+<h2 id="_5">五、工程结构与构建特点</h2>
+<h3 id="_6">每个示例的典型结构</h3>
+<pre><code>sampX_Y/
+├── CMakeLists.txt      # 构建配置（AUTOUIC/AUTOMOC/AUTORCC）
+├── main.cpp            # 入口（QApplication + 窗口 + exec）
+├── mainwindow.h/.cpp   # 或 widget/dialog 类
+├── mainwindow.ui       # 界面（Designer XML）
+└── res.qrc             # 资源（可选）
+</code></pre>
+<h3 id="cmake">CMake 要点（全书统一）</h3>
+<pre><code class="language-cmake">set(CMAKE_AUTOUIC ON)   # .ui → ui_xxx.h
+set(CMAKE_AUTOMOC ON)   # Q_OBJECT → moc
+set(CMAKE_AUTORCC ON)   # .qrc → qrc_xxx.cpp
+find_package(Qt6 REQUIRED COMPONENTS Widgets)
+qt_add_executable(app ...)
+target_link_libraries(app PRIVATE Qt6::Widgets)
+</code></pre>
+<h3 id="qmake">⚠️ 与 qmake 的差异（你已踩过）</h3>
+<ul>
+<li>qmake 工程有 <code>.pro</code>；CMake 工程只有 <code>CMakeLists.txt</code></li>
+<li><strong>CMake 不会自动扫描目录</strong>：新增 <code>.cpp/.h/.ui</code> 必须<strong>手动写进 <code>qt_add_executable</code></strong>（这是从 qmake/Qt Creator 转过来最容易踩的坑）</li>
+<li>本书 81 个工程中 79 个用 CMake，仅 Chap11 插件、Chap18 工具保留 <code>.pro</code></li>
+</ul>
+<hr />
+<h2 id="top">六、代码规模 Top 示例（值得精读的“大例子”）</h2>
+<table>
+<thead>
+<tr>
+<th>示例</th>
+<th>关键文件</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Chap17/samp17_1ESP8266</code></td>
+<td><code>mainwindow.ui</code> 41KB、<code>mainwindow.cpp</code> 11KB</td>
+<td>串口助手完整实现，界面最复杂</td>
+</tr>
+<tr>
+<td><code>Chap02/samp2_2VisualUI</code></td>
+<td>多控件 + qrc + rc</td>
+<td>可视化 UI 范式</td>
+</tr>
+<tr>
+<td><code>Chap14/samp14_4Semaphore</code></td>
+<td><code>mythread.cpp</code></td>
+<td>生产者-消费者经典模型</td>
+</tr>
+<tr>
+<td><code>Chap10/samp10_5GraphicsDraw</code></td>
+<td>Graphics View</td>
+<td>场景/图元框架</td>
+</tr>
+<tr>
+<td><code>Chap11/samp11_2Plugin</code></td>
+<td>插件 + <code>.pri</code></td>
+<td>Qt 插件完整流程</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_7">七、常见坑与注意事项（基于源码检查）</h2>
+<ol>
+<li><strong>仅 3 个工程无 <code>.ui</code></strong>：<code>samp2_3CodeUI</code>（纯代码）、<code>samp18_3Deploy</code>/<code>samp18_4Installer</code>（非界面）。别把后两者当“纯代码 UI”学。</li>
+<li><strong><code>samp2_4CMakeGUI</code>、<code>samp11_3/4</code>、<code>samp15_2</code> 等无 <code>main.cpp</code></strong>：是库/构建/服务端样例，不能单独运行。</li>
+<li><strong><code>Chap11</code> 的 <code>samp11_3StaticLib</code> / <code>samp11_4SharedLib</code> 目录里混入了构建产物</strong>（<code>.lib/.dll/.ninja_*</code>），说明是别人编译后的残留，学习时忽略这些二进制。</li>
+<li><strong><code>Chap17</code> 需要 SerialPort 模块</strong>；<code>Chap12</code> 需要 Charts；<code>Chap13</code> 需要 DataVisualization；<code>Chap16</code> 需要 Multimedia——<strong>Qt 安装时要勾选对应模块</strong>。</li>
+<li><strong>中文注释存在编码问题</strong>：部分文件注释显示为乱码（源文件可能是 GBK 保存），用 VS Code 打开可切编码查看。</li>
+<li><strong>本书基于 Qt 6.2/6.4 编写</strong>，你用的是 <strong>6.8.3</strong>，个别 API/CMake 写法可能有小差异（一般 CMake 通用）。</li>
+</ol>
+<hr />
+<h2 id="4">八、推荐学习计划（4 周）</h2>
+<table>
+<thead>
+<tr>
+<th>周</th>
+<th>内容</th>
+<th>目标</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第 1 周</td>
+<td>Chap01–02 + Chap04</td>
+<td>能独立建工程、拖界面、用常用控件、连信号槽</td>
+</tr>
+<tr>
+<td>第 2 周</td>
+<td>Chap05–08</td>
+<td>掌握 Model/View、事件、对话框、文件读写</td>
+</tr>
+<tr>
+<td>第 3 周</td>
+<td>Chap14 + Chap17 + Chap15</td>
+<td>做出「串口/TCP 采集 + 线程 + 界面刷新」的雏形</td>
+</tr>
+<tr>
+<td>第 4 周</td>
+<td>Chap12 + Chap09 + Chap18</td>
+<td>加曲线、存数据库、美化与发布</td>
+</tr>
+</tbody>
+</table>
+<p><strong>配套练习建议</strong>（把章节拼成一个完整上位机）：</p>
+<blockquote>
+<p>串口(Ch17)采集数据 → 线程(Ch14)不卡界面 → 表格/曲线(Ch05/Ch12)展示 → SQLite(Ch09)存历史 → QSS(Ch18)美化 → windeployqt(Ch18)发布</p>
+</blockquote>
+<hr />
+<h2 id="_8">九、与其它项目的对照（延伸学习）</h2>
+<table>
+<thead>
+<tr>
+<th>项目</th>
+<th>特点</th>
+<th>适合学什么</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>本书（Qt6 指南源码）</td>
+<td>教学、逐点小示例、以 .ui 为主</td>
+<td><strong>入门与知识覆盖</strong></td>
+</tr>
+<tr>
+<td><code>FluentHMI_Studio</code>（D:\FluentHMI_Studio）</td>
+<td>真实上位机设计器：QGraphicsScene 画布、数据绑定、串口/TCP/MQTT、导出运行器</td>
+<td><strong>工程化架构、数据驱动界面</strong></td>
+</tr>
+<tr>
+<td><code>FinceptTerminal</code>（D:\Qt\learn\github）</td>
+<td>工业级大型项目：DataHub 发布订阅、服务分层、SQLite 迁移、Python 混合</td>
+<td><strong>大型架构、性能与解耦</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>建议路线</strong>：先过本书（打基础）→ 精读 FluentHMI（学上位机架构）→ 浏览 FinceptTerminal（看工业级分层）。</p>
+<hr />
+<h2 id="81">十、速查：81 个示例一览</h2>
+<table>
+<thead>
+<tr>
+<th>章</th>
+<th>示例数</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>01</td>
+<td>1</td>
+<td>HelloWorld</td>
+</tr>
+<tr>
+<td>02</td>
+<td>5</td>
+<td>HelloQt、VisualUI、CodeUI、CMake、CMakeGUI</td>
+</tr>
+<tr>
+<td>03</td>
+<td>1</td>
+<td>Meta（元对象）</td>
+</tr>
+<tr>
+<td>04</td>
+<td>13</td>
+<td>StrChar、Str、StrNum、Spinbox、ButtonCheck、Slider、DateTime、Timer、Combobox、Actions、ListWidget、TreeWidget、TableWidget</td>
+</tr>
+<tr>
+<td>05</td>
+<td>4</td>
+<td>ListModel、TableModel、Delegate、FileSys</td>
+</tr>
+<tr>
+<td>06</td>
+<td>5</td>
+<td>DefaultHandler、EventAndSignal、EventFilter、DragFile、DragDropItems</td>
+</tr>
+<tr>
+<td>07</td>
+<td>5</td>
+<td>StandardDialogs、CustomDialogs、MultiWindow、MDI、Splash</td>
+</tr>
+<tr>
+<td>08</td>
+<td>4</td>
+<td>DirFile、TextFile、StreamData、RawBytes</td>
+</tr>
+<tr>
+<td>09</td>
+<td>4</td>
+<td>TableModel、QueryModel、QueryEdit、Rational</td>
+</tr>
+<tr>
+<td>10</td>
+<td>6</td>
+<td>Painter、Paintpath、ViewPort、Cooridate、GraphicsDraw、ImagePro</td>
+</tr>
+<tr>
+<td>11</td>
+<td>4</td>
+<td>Promotion、Plugin、StaticLib、SharedLib</td>
+</tr>
+<tr>
+<td>12</td>
+<td>4</td>
+<td>SimpleChart、ChartConfig、Interactive、BarAndPie</td>
+</tr>
+<tr>
+<td>13</td>
+<td>4</td>
+<td>Bar3D、Scatter3D、Surface3D、Map3D</td>
+</tr>
+<tr>
+<td>14</td>
+<td>4</td>
+<td>ThreadSignal、Mutex、Wait、Semaphore</td>
+</tr>
+<tr>
+<td>15</td>
+<td>5</td>
+<td>HostInfo、TCP、UDP、UDPMulticast、HTTP</td>
+</tr>
+<tr>
+<td>16</td>
+<td>7</td>
+<td>AudioPlayer、SoundEffect、AudioRecorder、AudioInOut、VideoWidget、VideoItem、Camera</td>
+</tr>
+<tr>
+<td>17</td>
+<td>1</td>
+<td>ESP8266（串口）</td>
+</tr>
+<tr>
+<td>18</td>
+<td>4</td>
+<td>MultiLang、QSS、Deploy、Installer</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_9">附：你的环境适配说明</h2>
+<table>
+<thead>
+<tr>
+<th>项</th>
+<th>状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Qt 6.8.3 (MinGW)</td>
+<td>✅ 已装</td>
+</tr>
+<tr>
+<td>Widgets/Network/Svg</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><strong>SerialPort（Chap17 需要）</strong></td>
+<td>✅ 已补装</td>
+</tr>
+<tr>
+<td><strong>Charts（Chap12 需要）</strong></td>
+<td>❌ 未装（需 <code>aqt install-qt ... --modules qtcharts</code>）</td>
+</tr>
+<tr>
+<td><strong>DataVisualization（Chap13）</strong></td>
+<td>❌ 未装</td>
+</tr>
+<tr>
+<td><strong>Multimedia（Chap16）</strong></td>
+<td>❌ 未装</td>
+</tr>
+<tr>
+<td>CMake + Ninja</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>cpptools / Qt 扩展</td>
+<td>✅</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>建议按需补装模块，避免一次装太多占空间。需要我补装 Charts 以配合 Chap12 学习吗？</p>
+</blockquote>
+<hr />
+<p><em>报告基于源码静态分析（文件统计、头文件引用频次、目录结构、抽样代码阅读）生成，未逐个编译全部示例。</em></p>
+</main>
+</div>
+<script>
+// 用 h2/h3 生成侧边目录
+(function(){
+  const toc = document.getElementById('toc');
+  const nodes = document.querySelectorAll('main h2, main h3');
+  const ul = document.createElement('ul');
+  let currentH2 = null;
+  nodes.forEach(function(n){
+    if (n.tagName === 'H2') {
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = '#' + n.id; a.textContent = n.textContent;
+      li.appendChild(a); ul.appendChild(li);
+      currentH2 = li;
+    } else if (n.tagName === 'H3' && currentH2) {
+      let sub = currentH2.querySelector('ul');
+      if (!sub) { sub = document.createElement('ul'); currentH2.appendChild(sub); }
+      const li = document.createElement('li');
+      const a = document.createElement('a');
+      a.href = '#' + n.id; a.textContent = n.textContent;
+      li.appendChild(a); sub.appendChild(li);
+    }
+  });
+  toc.appendChild(ul);
+})();
+</script>
+</body>
+</html>

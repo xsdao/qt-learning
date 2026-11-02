@@ -1,0 +1,34 @@
+# Build output
+build/
+builds/
+out/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+*.pro.user
+*.pro.user.*
+
+# Qt Creator
+.qtcreator/
+
+# Editors
+.vscode/
+.idea/
+
+# Compiled binaries / objects
+*.exe
+*.dll
+*.lib
+*.a
+*.o
+*.obj
+*.pdb
+*.ilk
+*.so
+*.dylib
+
+# Misc
+*.autosave
+Thumbs.db
+.DS_Store
