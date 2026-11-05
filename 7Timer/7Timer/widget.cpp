@@ -38,3 +38,10 @@ void Widget::timerEvent(QTimerEvent *event)
         qApp->quit();
     }
 }
+
+void Widget::paintEvent(QPaintEvent *event)
+{
+    QPainter painter(this);
+
+    painter.drawLine(QPointF(0, 0), QPointF(100, 100));
+}

@@ -17,7 +17,19 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow() override;
 
+    void newFlie();
+
+    bool maybeSave();
+
+    bool save();
+
+    bool saveFile(const QString &fileName);
+
 private:
     Ui::MainWindow *ui;
+
+    bool isUntitled;
+
+    QString curFilePath;
 };
 #endif // MAINWINDOW_H
